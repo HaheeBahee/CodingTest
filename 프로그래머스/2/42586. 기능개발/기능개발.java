@@ -5,40 +5,41 @@
 /*
 100% 되기까지 남은 진도 / 배포속도
 맨앞의 요소와 같거나 작은 요소의 개수 출력
-
+-> 맨앞 요소 기억, 같거나 작은요소 만나면 count
 */
+
+
 
 import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-       
-        
-        Queue<Integer> queue = new LinkedList<>();
-        
-        for (int i = 0; i < progresses.length; i++) {
-            int day = (100 - progresses[i] + speeds[i] - 1) / speeds[i];
-            queue.offer(day);
-        }
         
         List<Integer> result = new ArrayList<>();
         
-        while(!queue.isEmpty()){
-            
-            int current = queue.poll();
-            int count = 1;
-            
-            while(!queue.isEmpty() && queue.peek() <= current){
-                queue.poll();
-                count++;
+        int 기준일수 = remain(progresses[0], speeds[0]);
+        int count = 1;
+
+        for (int i = 1; i < progresses.length; i++) {
+            int 다음일수 = remain(progresses[i], speeds[i]);
+
+            if (다음일수 <= 기준일수) {
+                count++; // 같은 배포에 포함
+            } else {
+                result.add(count); // 이전 배포 확정
+                기준일수 = 다음일수; // 기준 갱신
+                count = 1; // 새 배포 시작
             }
-            
-            result.add(count); 
-                
         }
-        int[] answer = new int[result.size()];
-        for (int i = 0; i < result.size(); i++) answer[i] = result.get(i);
-        return answer;
+
+        result.add(count); // 마지막 배포 묶음 추가
         
+        int[] answer = new int[result.size()];
+        for(int i = 0; i<result.size(); i++) answer[i] = result.get(i);
+        return answer;
+    }
+     
+   public int remain(int progress, int speed) {
+        return (100 - progress + speed - 1) / speed; // 올림 정수 나눗셈
     }
 }
