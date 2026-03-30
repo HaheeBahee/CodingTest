@@ -1,21 +1,29 @@
-//1. 즉시 실패 조건 : 반드시 ) 개수는 (보다 크면 안된다. 
-//2. 종료 조건 : (개수 = )개수
-//괄호 종류 1개 -> balance 
+// 1. ( 만나면 스택에 넣기
+// 2. ) 만나면 스택에서 꺼내기
+// 스택에서 꺼낼 거 없으면 false
+// 마지막에 스택에 요소 남아있으면 false
+
+// "괄호의 개수 균형" 만 알면 되기 때문에 stack 쓰는건 과하긴 해.
+
+import java.util.*;
 
 class Solution {
-    boolean solution(String s) {
-        int balance = 0;
+    
+    boolean solution(String s){
+        
+        Stack<Character> stack = new Stack<>();
 
-        for (int i = 0; i < s.length(); i++) {
+        for(int i = 0; i < s.length(); i++){
             char c = s.charAt(i);
-
-            if (c == '(') {
-                balance++;
-            } else { // ')'
-                if (--balance < 0) return false; // 닫을 '('가 없음
+            if(c == '('){
+                stack.push('(');
+            }else{
+                if(stack.isEmpty()){
+                    return false;
+                }
+                stack.pop();
             }
         }
-
-        return balance == 0;
+       return stack.isEmpty();
     }
 }
