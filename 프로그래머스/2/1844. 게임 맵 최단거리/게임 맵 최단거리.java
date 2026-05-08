@@ -3,42 +3,48 @@
 //동서남북. 한칸씩 -> 선택지 4개
 //상대 팀 진영 막혀있으면 아예 불가
 
-import java.util.ArrayDeque;
+import java.util.*;
 
 class Solution {
     public int solution(int[][] maps) {
-        int n = maps.length, m = maps[0].length;
-
-        // 시작이나 도착이 벽인 경우 
-        if (maps[0][0] == 0 || maps[n-1][m-1] == 0) return -1;
-
-        int[][] dist = new int[n][m]; // 0은 미방문, 양수: 거리
-        int[] dr = {1, -1, 0, 0};
-        int[] dc = {0, 0, 1, -1};
-
-        ArrayDeque<int[]> q = new ArrayDeque<>();
-        q.offer(new int[]{0, 0});
-        dist[0][0] = 1;
-
-        while (!q.isEmpty()) {
-            int[] cur = q.poll();
-            int r = cur[0], c = cur[1];
-
         
-            if (r == n - 1 && c == m - 1) return dist[r][c];
+        Queue<int[]> queue = new ArrayDeque<>();
+        boolean[][] visited = new boolean[maps.length][maps[0].length];
+        
+        int startX = 0; // 시작 위치
+        int startY = 0;
+        
+        visited[startX][startY] = true;
+        queue.offer(new int[]{startX, startY, 1});
+        
+        int[] dx = {-1,1,0,0};
+        int[] dy = {0,0,-1,1};
+        
+        
+        while(!queue.isEmpty()){
+            int[] current = queue.poll();
+            int currentX = current[0], currentY = current[1]; // 현재 위치를 사용해서 다음 요소의 위치 알려고.
+            int distance = current[2];
 
-            for (int k = 0; k < 4; k++) {
-                int nr = r + dr[k], nc = c + dc[k];
-
-               
-                if (nr < 0 || nc < 0 || nr >= n || nc >= m) continue;
-                if (maps[nr][nc] == 0 || dist[nr][nc] != 0) continue;
-
-                dist[nr][nc] = dist[r][c] + 1;
-                q.offer(new int[]{nr, nc});
+            if (currentX == maps.length - 1 && currentY == maps[0].length - 1) {
+                return distance;
             }
+            
+            for(int i = 0; i < 4; i++){
+                int nextX = currentX + dx[i];
+                int nextY = currentY + dy[i];
+                
+                if(nextX < 0 || nextX >= maps.length || nextY < 0 || nextY >= maps[0].length) continue;
+                if(visited[nextX][nextY]) continue;
+                if (maps[nextX][nextY] == 0) continue;
+                
+                visited[nextX][nextY] = true;
+                queue.offer(new int[]{nextX, nextY, distance + 1});
+            }
+            
         }
-   
+        
         return -1;
+
     }
 }
