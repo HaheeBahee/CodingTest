@@ -1,27 +1,32 @@
-//연속되는 숫자 하나만 남김 -> 직전 요소와 현재 요소와 비교  -> 스택 or 큐 
-// -> 직전(마지막) 요소와 비교한다는 점에서 스택을 사용해야함. 큐는 맨앞만 확인가능
-//제거 후 남은 요소들 반환시 순서 유지 -> 큐 -> 틀렸어
-//반환 배열의 길이 모름 -> 리스트
+// 연속적으로 나타내는 숫자 하나만 남기고 제거 , 기본 순서는 유지해야함
+// 직전 요소와 현재 요소만 비교하면 되므로 Stack 사용, 꺼낼때 뒤에서부터 채워야함. 
+
+// 리팩토링 팁 : Stack 대신 List 사용하면 역순 복원 불필요
+//              → answer.get(answer.size() - 1) 로 직전 요소 바로 비교 가능
+//              → 코드가 더 단순해지므로 실전에서는 List 권장
 
 import java.util.*;
 
 public class Solution {
-    public int[] solution(int[] arr) {
+    public int[] solution(int[] inputArr) {
 
-        Deque<Integer> compressedNumbers = new ArrayDeque<>();
+        // 결과를 담을 리스트 (크기를 모르니까 List 사용)
+        List<Integer> answer = new ArrayList<>();
 
-        for (int currentNumber : arr) {
-            // 마지막에 들어간 숫자와 현재 숫자가 다르면 추가
-            if (compressedNumbers.isEmpty() || compressedNumbers.peekLast() != currentNumber) {
-                compressedNumbers.addLast(currentNumber);
+        for (int i = 0; i < inputArr.length; i++) {
+            int current = inputArr[i];
+
+            // 리스트가 비어있거나, 마지막 요소와 현재 요소가 다를 때만 추가
+            // (int) 캐스팅으로 Integer → int 언박싱 후 비교
+            if (answer.isEmpty() || (int) answer.get(answer.size() - 1) != current) {
+                answer.add(current);
             }
         }
 
-        int[] result = new int[compressedNumbers.size()];
-        int resultIndex = 0;
-
-        for (int number : compressedNumbers) {
-            result[resultIndex++] = number;
+        // List<Integer> → int[] 변환
+        int[] result = new int[answer.size()];
+        for (int i = 0; i < answer.size(); i++) {
+            result[i] = answer.get(i);
         }
 
         return result;
