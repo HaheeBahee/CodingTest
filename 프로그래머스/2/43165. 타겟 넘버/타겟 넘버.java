@@ -1,30 +1,27 @@
-//입력 정수들을 사용 + 순서 바뀜 X + 빼기/더하기를 이용해 특정 넘버를 만든다.
-//특정 넘버를 만들 수 있는 방법의 수를 리턴
-import java.util.*;
+// 순서 바꾸지 않고 더하거나 빼서 타겟 넘버 만들기
+// 인풋: 사용할 양수 정수들, 아웃풋: 타겟 넘버 만들 수 있는 방법 개수
+// 순서 바뀌지 않고 +- 둘 중 하나 선택하며 뻗어나감 => 이진 트리
 
-class Solution {
-    public int solution(int[] numbers, int target) {
-        int answer = 0;
-        Stack<int[]> stack = new Stack<>();
-        stack.push(new int[]{0,0});
+class Solution{
+    int method = 0;
+
+    public int solution(int[] numbers, int target){
         
-        int h = numbers.length;
-        
-        while(!stack.isEmpty()){
-            int[] next = stack.pop();
-            int index = next[0];
-            int sum = next[1];
-            
-            if(index == h){
-                if(sum == target) answer ++;
-                continue;
+        dfs(numbers,target,0,0);
+        return method;
+
+    }
+    
+    void dfs(int[] numbers, int target, int depth, int currentSum){
+        // 종료 조건
+        if(depth == numbers.length){
+            if(currentSum == target){
+                method++;
             }
-            
-            stack.push(new int[]{index + 1, sum - numbers[index]}); // - 선택
-            stack.push(new int[]{index + 1, sum + numbers[index]}); //+ 선택
-            
+            return;
         }
         
-        return answer;
+        dfs(numbers, target, depth + 1, currentSum + numbers[depth]);
+        dfs(numbers, target, depth + 1, currentSum - numbers[depth]);
     }
 }
