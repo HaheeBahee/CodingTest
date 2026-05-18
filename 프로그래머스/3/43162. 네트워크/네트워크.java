@@ -1,23 +1,36 @@
-class Solution {
-    public int solution(int n, int[][] computers) {
-        boolean[] visited = new boolean[n];
-        int networks = 0;
+import java.util.*;
 
-        for (int i = 0; i < n; i++) {
-            if (!visited[i]) {
-                dfs(i, n, computers, visited);
-                networks++;
+class Solution{
+    public int solution(int computerNumber, int[][] computers){
+        
+        int network = 0;
+        boolean[] visited = new boolean[computerNumber];
+        
+        
+        for(int i = 0; i < computerNumber; i++){
+            if(!visited[i]){
+                BFS(i, visited, computerNumber, computers);
+                network++;
+            }
+        } return network;
+    }
+    
+    void BFS(int start, boolean[] visited, int computerNumber, int[][] computers){
+        Queue<Integer> queue = new ArrayDeque<>();
+        visited[start] = true;
+        queue.offer(start);
+        
+        while(!queue.isEmpty()){
+            int curr = queue.poll();
+            for(int i = 0 ; i < computerNumber; i++){
+                if(!visited[i] && computers[curr][i] == 1){
+                    visited[i] = true;
+                    queue.offer(i);
+                }
             }
         }
-        return networks;
+        
     }
-
-    private void dfs(int cur, int n, int[][] computers, boolean[] visited) {
-        visited[cur] = true;
-        for (int next = 0; next < n; next++) {
-            if (next != cur && computers[cur][next] == 1 && !visited[next]) {
-                dfs(next, n, computers, visited);
-            }
-        }
-    }
+    
+    
 }
