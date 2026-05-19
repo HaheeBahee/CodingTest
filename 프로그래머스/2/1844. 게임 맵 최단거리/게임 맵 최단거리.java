@@ -5,46 +5,44 @@
 
 import java.util.*;
 
-class Solution {
-    public int solution(int[][] maps) {
+class Solution{
+    public static int solution(int[][] maps){
         
         Queue<int[]> queue = new ArrayDeque<>();
         boolean[][] visited = new boolean[maps.length][maps[0].length];
         
-        int startX = 0; // 시작 위치
-        int startY = 0;
-        
-        visited[startX][startY] = true;
-        queue.offer(new int[]{startX, startY, 1});
         
         int[] dx = {-1,1,0,0};
         int[] dy = {0,0,-1,1};
         
+        int[] start = {0,0,1};
+        visited[start[0]][start[1]] = true;
+        queue.offer(start);
+        
         
         while(!queue.isEmpty()){
-            int[] current = queue.poll();
-            int currentX = current[0], currentY = current[1]; // 현재 위치를 사용해서 다음 요소의 위치 알려고.
-            int distance = current[2];
-
-            if (currentX == maps.length - 1 && currentY == maps[0].length - 1) {
-                return distance;
+            int[] curr = queue.poll();
+            int startX = curr[0], startY = curr[1], dist = curr[2];
+            
+            // 도착지점
+            if(startX == maps.length - 1 && startY == maps[0].length - 1){
+                return dist;
             }
             
             for(int i = 0; i < 4; i++){
-                int nextX = currentX + dx[i];
-                int nextY = currentY + dy[i];
-                
+                int nextX = startX + dx[i], nextY = startY + dy[i];                
                 if(nextX < 0 || nextX >= maps.length || nextY < 0 || nextY >= maps[0].length) continue;
-                if(visited[nextX][nextY]) continue;
-                if (maps[nextX][nextY] == 0) continue;
+                if(maps[nextX][nextY] == 0 || visited[nextX][nextY]) continue;
                 
                 visited[nextX][nextY] = true;
-                queue.offer(new int[]{nextX, nextY, distance + 1});
+                queue.offer(new int[]{nextX, nextY, dist + 1});
             }
-            
-        }
+        } 
         
         return -1;
-
+        
+        
+        
+        
     }
 }
