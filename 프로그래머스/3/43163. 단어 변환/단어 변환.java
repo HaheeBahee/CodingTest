@@ -1,56 +1,43 @@
-import java.util.*; 
+// 1번에 1개 바꿈, words에 있는 걸로만 변경가능
+// 최단 변경 순서 -> BFS
+// 해당 스트링과 요소 하나만 다른 걸 찾아야함.
 
+import java.util.*;
 
-class Solution {
-    public int solution(String begin, String target, String[] words) {
+class Solution{
+    public static int solution(String begin, String target, String[] words){
         
-        //초기 가지치기 - words에 target 없으면 0 반환 
-        boolean hasTarget = false;
-        for (String w : words) {
-            if (w.equals(target)) { hasTarget = true; break; }
-        }
-        if (!hasTarget) return 0;
-        
-        //최소 단계 - bfs - 큐
-        Queue<Node> queue = new ArrayDeque<>();
-        queue.offer(new Node(begin, 0));
+        Queue<String[]> queue = new ArrayDeque<>();
         boolean[] visited = new boolean[words.length];
+        queue.offer(new String[]{begin, "0"});
         
-        while (!queue.isEmpty()) { 
-            Node cur = queue.poll();
-
-            if (cur.word.equals(target)) return cur.depth;
-
-            for (int i = 0; i < words.length; i++) {
-                if (!visited[i] && diffByOne(cur.word, words[i])) {
+        while(!queue.isEmpty()){
+            String[] curr = queue.poll();
+            String word = curr[0];
+            int dist = Integer.parseInt(curr[1]);
+            
+            if(word.equals(target)){
+                return dist;
+            }
+            
+            for(int i = 0; i < words.length; i++){
+                int compare = 0;
+                for(int j = 0; j < begin.length(); j++){
+                    char c1 = word.charAt(j);
+                    char c2 = words[i].charAt(j);
+                    if(c1 != c2) compare++;
+                }
+                if(compare == 1 && !visited[i]){
                     visited[i] = true;
-                    queue.offer(new Node(words[i], cur.depth + 1));
+                    queue.offer(new String[]{words[i], String.valueOf(dist + 1)});
                 }
             }
+            
+            
         }
-        return 0; // 변환 불가
+        return 0;
+        
+        
+        
     }
-    
-    //큐의 요소 형태 정의
-    private static class Node{
-        String word;
-        int depth;
-        Node(String word, int depth){
-            this.word = word;
-            this.depth = depth;
-        }
-    }
-    
-    //한 글자만 다른지 체크
-    private boolean diffByOne(String word1, String word2){
-        int diff = 0;
-        for(int i = 0; i <word1.length(); i++){
-            if (word1.charAt(i) != word2.charAt(i)) {
-                diff++;
-                if (diff > 1) return false; // 조기 종료
-            }
-        }
-        return diff == 1;
-    }
-    
 }
