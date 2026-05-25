@@ -1,48 +1,39 @@
+// 한자리 숫자로 쪼개 -> 만들 수 있는 소수 개수 반환
+// 순서 중요, 모든 경우의 수, for 문 여러개 -> 완전 탐색
+
 import java.util.*;
 
-class Solution {
-    private final Set<Integer> uniqueNumbers = new HashSet<>();
-    private boolean[] isDigitUsed;
-    private char[] digits;
-
-    public int solution(String numbers) {
-        digits = numbers.toCharArray();
-        isDigitUsed = new boolean[digits.length];
-
-        buildNumbers(new StringBuilder(), 0);
-
-        int primeCount = 0;
-        for (int value : uniqueNumbers) {
-            if (isPrime(value)) primeCount++;
+class Solution{
+    Set<Integer> primes = new HashSet<>();
+    
+    public int solution(String numbers){
+        
+        int[] intNum = new int[numbers.length()];
+        for(int i = 0; i < numbers.length(); i++){
+            intNum[i] = numbers.charAt(i) - '0';
         }
-        return primeCount;
+        
+        boolean[] visited = new boolean[numbers.length()];
+        
+        소수(intNum, 0, visited);
+        return primes.size();
     }
-
-    private void buildNumbers(StringBuilder current, int depth) {
-        if (current.length() > 0) {
-            uniqueNumbers.add(Integer.parseInt(current.toString()));
-        }
-        if (depth == digits.length) return;
-
-        for (int i = 0; i < digits.length; i++) {
-            if (isDigitUsed[i]) continue;
-
-            isDigitUsed[i] = true;
-            current.append(digits[i]);
-
-            buildNumbers(current, depth + 1);
-
-            current.deleteCharAt(current.length() - 1);
-            isDigitUsed[i] = false;
+    
+    public void 소수(int[] intNum, int current, boolean[] visited){
+        
+        for(int i = 0; i < intNum.length; i++){
+            if(visited[i]) continue;
+            visited[i] = true;
+            if(isPrime(current * 10 + intNum[i])) primes.add(current * 10 + intNum[i]);
+            소수(intNum, current * 10 + intNum[i], visited);
+            visited[i] = false;
         }
     }
-
-    private boolean isPrime(int n) {
-        if (n < 2) return false;
-        if (n % 2 == 0) return n == 2;
-        int limit = (int) Math.sqrt(n);
-        for (int d = 3; d <= limit; d += 2) {
-            if (n % d == 0) return false;
+    
+    public boolean isPrime(int n){
+        if(n < 2 ) return false;
+        for(int i = 2; i <= Math.sqrt(n); i++){
+            if(n % i == 0) return false;
         }
         return true;
     }
