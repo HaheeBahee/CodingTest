@@ -1,28 +1,27 @@
+// 한 명 빼고 모두 완주
+// 인풋 : 참여 선수 이름, 완주 선수 이름
+// 아웃풋 : 완주 못한 선수 이름
+// 주의 : 동명이인 있음
+
+// 참여 선수 배열 - 완주 선수 
+
 import java.util.*; 
 
 class Solution {
     public String solution(String[] participant, String[] completion) {
-        String answer = "";
         
         Map<String, Integer> map = new HashMap<>();
-        for(String pName : participant){
-            map.put(pName, map.getOrDefault(pName, 0) +1);
+        for(String person : participant){
+            map.put(person, map.getOrDefault(person, 0) + 1);
         }
         
-        for(String cName : completion){
-            map.replace(cName, map.get(cName) - 1);
-        }
-        
-        for(Map.Entry<String, Integer> entry : map.entrySet()){
-            if(entry.getValue() > 0){ // 남은 선수가 완주 못한 선수
-                answer = entry.getKey();
-                break;
+        for(int i = 0; i < completion.length; i++){
+            if (map.get(completion[i]) == 1) {
+                map.remove(completion[i]);
+            } else {
+                map.put(completion[i], map.get(completion[i]) - 1); 
             }
         }
-        
-        
-        
-        
-        return answer;
+        return map.keySet().iterator().next();
     }
 }
