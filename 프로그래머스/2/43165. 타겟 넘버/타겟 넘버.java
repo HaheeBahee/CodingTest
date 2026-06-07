@@ -2,26 +2,32 @@
 // 인풋: 사용할 양수 정수들, 아웃풋: 타겟 넘버 만들 수 있는 방법 개수
 // 순서 바뀌지 않고 +- 둘 중 하나 선택하며 뻗어나감 => 이진 트리
 
+
 class Solution{
-    int method = 0;
-
+    
+    int count = 0;
+    
     public int solution(int[] numbers, int target){
-        
-        dfs(numbers,target,0,0);
-        return method;
-
+       
+        int index = 0;
+        int currentSum = 0;
+        dfs(index, currentSum, numbers, target);
+        return count;
     }
     
-    void dfs(int[] numbers, int target, int depth, int currentSum){
-        // 종료 조건
-        if(depth == numbers.length){
+
+
+    public void dfs(int index, int currentSum, int[] numbers, int target){
+        // 종료 시점 
+        if (index == numbers.length){
             if(currentSum == target){
-                method++;
+                count++;
             }
             return;
         }
         
-        dfs(numbers, target, depth + 1, currentSum + numbers[depth]);
-        dfs(numbers, target, depth + 1, currentSum - numbers[depth]);
+        // 다음 단계 
+            dfs(index + 1, currentSum + numbers[index], numbers, target);
+            dfs(index + 1, currentSum - numbers[index], numbers, target);
     }
 }
