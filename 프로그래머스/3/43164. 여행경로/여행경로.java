@@ -6,38 +6,36 @@ import java.util.*;
 
 
 class Solution {
-    public String[] solution(String[][] tickets) {
+    
+    
+    public String[] solution(String[][] tickets){
+        Arrays.sort(tickets, (a,b) -> a[1].compareTo(b[1]));
         
-        Arrays.sort(tickets, (a, b) -> a[1].compareTo(b[1])); // 정렬
-        boolean[] visited = new boolean[tickets.length];        
-        List<String> path = new ArrayList<>();
-    
-        path.add("ICN");
-        dfs("ICN", path, visited, tickets);
-    
-        return path.toArray(new String[0]);  // List → String[] 변환
-}
-        
-
-    
-    
-    boolean dfs(String now, List<String> path, boolean[] visited, String[][] tickets){        
-        // 종료조건
-        if(path.size() == tickets.length + 1) return true;
-
-        
-        for(int i = 0; i < tickets.length; i++){
-            if(now.equals(tickets[i][0]) && !visited[i]){
-                visited[i] = true;
-                path.add(tickets[i][1]);
+        boolean[] visited = new boolean[tickets.length];
+        List<String> 경로 = new ArrayList<>();
             
-                if(dfs(tickets[i][1], path, visited, tickets)) return true; // true가 아래에서 위로 전파되면서 탐색이 즉시 멈춰.
-
-                 // 백트래킹
-                visited[i] = false;
-                path.remove(path.size() - 1);
-
+        String start = "ICN";
+        경로.add("ICN");
+        dfs(start, visited, 경로, tickets);
+        return 경로.toArray(new String[0]);
+    }
+    
+    public void dfs(String current, boolean[] visited, List<String> 경로, String[][] tickets){
+    
+        for(int i = 0; i < tickets.length; i++){
+            if(!visited[i] && tickets[i][0].equals(current)){
+                visited[i] = true;
+                경로.add(tickets[i][1]);
+                dfs(tickets[i][1], visited, 경로, tickets);
+                
+            // 경로 완성됐으면 그냥 return
+            if(경로.size() == tickets.length + 1) return;
+            
+            // 완성 안 됐으면 → 되돌리기
+            visited[i] = false;
+            경로.remove(경로.size() - 1);
             }
-        } return false;
+        } 
+        
     }
 }
