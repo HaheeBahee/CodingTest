@@ -1,36 +1,37 @@
+// 아웃 풋 : 네트워크 개수 
+// 깊게 파서 연결된 뭉텅이 개수 -> DFS
+
+// 한 네트워크에서 연결된거 쭉 모든 가능한 경로 다 갔 다 와. 
+
 import java.util.*;
 
 class Solution{
-    public int solution(int computerNumber, int[][] computers){
-        
-        int network = 0;
-        boolean[] visited = new boolean[computerNumber];
-        
-        
-        for(int i = 0; i < computerNumber; i++){
+    int network =0;
+    
+    public int solution(int n, int[][] computers){
+        // 방문 처리 해야함. 
+        boolean[] visited = new boolean[n];
+        for(int i = 0; i < n; i++){
             if(!visited[i]){
-                BFS(i, visited, computerNumber, computers);
+                dfs(i, visited, computers);
                 network++;
             }
-        } return network;
+        }
+        return network;
+                
     }
     
-    void BFS(int start, boolean[] visited, int computerNumber, int[][] computers){
-        Queue<Integer> queue = new ArrayDeque<>();
-        visited[start] = true;
-        queue.offer(start);
+    public void dfs(int i, boolean[] visited, int[][] computers){
+        visited[i] = true;
         
-        while(!queue.isEmpty()){
-            int curr = queue.poll();
-            for(int i = 0 ; i < computerNumber; i++){
-                if(!visited[i] && computers[curr][i] == 1){
-                    visited[i] = true;
-                    queue.offer(i);
-                }
+        for(int j = 0; j < visited.length; j++){
+            if(computers[i][j] == 1 && !visited[j]){
+                dfs(j, visited, computers);
             }
         }
+        return;
         
-    }
     
-    
+        
+    }       
 }
