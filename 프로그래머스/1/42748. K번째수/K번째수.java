@@ -1,19 +1,23 @@
-import java.util.Arrays;
+// 자르기 -> 정렬 -> 찾기 
 
-class Solution {
-    public int[] solution(int[] array, int[][] commands) {
-        int[] answer = new int[commands.length];
+import java.util.*;
 
-        for (int i = 0; i < commands.length; i++) {
-            int start = commands[i][0] - 1; 
-            int end   = commands[i][1];     
-            int k     = commands[i][2];    
-
-            int[] newArray = Arrays.copyOfRange(array, start, end);
-            Arrays.sort(newArray);
-            answer[i] = newArray[k - 1];
+class Solution{
+    public int[] solution(int[] array, int[][] commands){
+        
+        int[] result = new int[commands.length];
+        
+        
+        for(int i = 0; i < commands.length; i++){
+            // 자르기
+            int[] cut = Arrays.copyOfRange(array, commands[i][0] -1, commands[i][1]);
+            
+            // 정렬
+            Arrays.sort(cut);
+            
+            // 찾기
+            result[i] = cut[commands[i][2] - 1];
         }
-
-        return answer;
+        return result;
     }
 }
