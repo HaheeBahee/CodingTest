@@ -1,21 +1,28 @@
-//처음 나오면 -1
-//가장 가까운 것과 인덱스 차이 구해서 거리 배열에 넣기 
+/*
+자신보다 앞에 있으면서 가장 가까운 같은 글자의 위치
+없으면 -1
+존재했는지 유무와 위치를 기억해야하니까 Hashmap을 사용 
+글자를 키 위치를 인덱스로 표시
+*/
+
+import java.util.*;
 class Solution {
     public int[] solution(String s) {
-        int n = s.length();
-        int[] answer = new int[n];
-
-        int index = 0; // 현재 문자의 인덱스
-        for (char a : s.toCharArray()) { 
-            answer[index] = -1;             // 기본값
-            for (int i = index - 1; i >= 0; i--) {
-                if (s.charAt(i) == a) {
-                    answer[index] = index - i;
-                    break;
-                }
+        
+        HashMap<Character, Integer> map = new HashMap<>();
+        int[] result = new int[s.length()];
+        
+        for(int i = 0; i < s.length(); i++){
+            if(map.containsKey(s.charAt(i))){
+                result[i] = i - map.get(s.charAt(i));
+                map.put(s.charAt(i), i);
+            }else{ // 키 없으면 
+                result[i] = -1;
             }
-            index++;
+            map.put(s.charAt(i), i);
+
         }
-        return answer;
+
+        return result;
     }
 }
